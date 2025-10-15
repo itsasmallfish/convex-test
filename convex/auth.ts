@@ -1,5 +1,5 @@
 import GitHub from "@auth/core/providers/github";
-import { convexAuth } from "@convex-dev/auth/server";
+import { convexAuth, getAuthUserId } from "@convex-dev/auth/server";
 import { query } from "./_generated/server";
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
@@ -11,15 +11,14 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   ],
 });
 
-export const getUser = query({
+
+export const currentUser = query({
   args: {},
   handler: async (ctx) => {
-    try {
-      const identity = await ctx.auth.getUserIdentity();
-      return identity;
-    } catch (error) {
-      console.error("Auth error:", error);
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
       return null;
     }
+    return await ctx.db.get(userId);
   },
 });
