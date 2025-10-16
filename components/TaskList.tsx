@@ -123,7 +123,7 @@ function TaskManager() {
                 >
                   <Checkbox
                     checked={task.completed}
-                    onCheckedChange={() => toggleTask({id: task._id})}
+                    onCheckedChange={() => toggleTask({id: task._id, completed: !task.completed})}
                     className="flex-shrink-0"
                   />
                   <span

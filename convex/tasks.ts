@@ -41,7 +41,9 @@ export const removeTask = mutation({
 });
 
 export const toggleTask = mutation({
-    args: { id: v.id("tasks") },
+    args: { id: v.id("tasks"),
+        completed: v.boolean()
+     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);
         if (!userId) { 
@@ -54,6 +56,6 @@ export const toggleTask = mutation({
         if (task.author !== userId) { 
             throw new Error("You can only toggle your own tasks");
         }
-        return await ctx.db.patch(args.id, { completed: !task.completed });
+        return await ctx.db.patch(args.id, { completed: args.completed });
     }
 });
